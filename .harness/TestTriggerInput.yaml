@@ -1,0 +1,19 @@
+inputSet:
+  name: Test-Trigger-Input
+  identifier: TestTriggerInput
+  orgIdentifier: default
+  projectIdentifier: NodeJs_AWS_Replication
+  pipeline:
+    identifier: NodePipeline
+    properties:
+      ci:
+        codebase:
+          build: <+input>
+    stages:
+      - stage:
+          identifier: Build_and_Test
+          type: CI
+          variables:
+            - name: Test
+              type: String
+              value: <+input>
