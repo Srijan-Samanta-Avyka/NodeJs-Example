@@ -1,19 +1,50 @@
-inputSet:
-  name: Test-Trigger-Input
-  identifier: TestTriggerInput
-  orgIdentifier: default
+pipeline:
+  name: Node-Pipeline
+  identifier: NodePipeline
   projectIdentifier: NodeJs_AWS_Replication
-  pipeline:
-    identifier: NodePipeline
-    properties:
-      ci:
-        codebase:
-          build: <+input>
-    stages:
-      - stage:
-          identifier: Build_and_Test
-          type: CI
-          variables:
-            - name: Test
-              type: String
-              value: <+input>
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: SrijanGitHubConnector
+        repoName: NodeJs-Example
+        build: <+input>
+        sparseCheckout: []
+  stages:
+    - stage:
+        name: Build and Test
+        identifier: Build_and_Test
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Run_1
+                  identifier: Run_1
+                  spec:
+                    connectorRef: Srija_Docker_Connector
+                    image: memcached
+                    shell: Powershell
+                    command: |-
+                      $env:name="123"
+                        $env:Version="1.2.3.4"
+                    outputVariables:
+                      - name: NewName
+                        type: String
+                        value: name
+        variables:
+          - name: Test
+            type: String
+            description: ""
+            required: false
+            value: <+input>
